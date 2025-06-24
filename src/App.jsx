@@ -170,7 +170,7 @@ const App = () => {
 
       <div className="bg-white p-4 sm:p-6 rounded-lg shadow-xl w-full max-w-4xl border border-gray-200 print-container">
         <h1 className="text-2xl sm:text-3xl font-extrabold text-center text-indigo-700 mb-4 sm:mb-6 border-b-2 pb-2">
-          Lending Business Application
+          Connie's Pautang Application
         </h1>
 
         <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
