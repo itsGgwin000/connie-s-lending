@@ -106,7 +106,7 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4 font-inter print:bg-white print:p-0">
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-2 sm:p-4 font-inter print:bg-white print:p-0">
       {/* Print-specific styles */}
       <style>
         {`
@@ -176,14 +176,15 @@ const App = () => {
         `}
       </style>
 
-      <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-4xl border border-gray-200 print-container">
-        <h1 className="text-3xl font-extrabold text-center text-indigo-700 mb-6 border-b-2 pb-2">
-          Lending Business Application
+      <div className="bg-white p-4 sm:p-6 rounded-lg shadow-xl w-full max-w-4xl border border-gray-200 print-container">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-center text-indigo-700 mb-4 sm:mb-6 border-b-2 pb-2">
+          Connie's Pautang Application
         </h1>
 
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
           {/* Form Group: Received Cash */}
-          <div className="col-span-1">
+          {/* Changed col-span-1 to col-span-full for small screens */}
+          <div className="col-span-full sm:col-span-1 flex flex-col">
             <label htmlFor="receivedCash" className="block text-sm font-medium text-gray-700 mb-1">
               RECEIVED CASH:
             </label>
@@ -198,7 +199,8 @@ const App = () => {
           </div>
 
           {/* Form Group: Name */}
-          <div className="col-span-1">
+          {/* Changed col-span-1 to col-span-full for small screens */}
+          <div className="col-span-full sm:col-span-1 flex flex-col">
             <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
               Name:
             </label>
@@ -219,7 +221,8 @@ const App = () => {
           </div>
 
           {/* Form Group: Address */}
-          <div className="col-span-2">
+          {/* Ensured col-span-full for small screens and sm:col-span-2 for larger */}
+          <div className="col-span-full sm:col-span-2 flex flex-col">
             <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
               Address:
             </label>
@@ -234,7 +237,8 @@ const App = () => {
           </div>
 
           {/* Form Group: Credit Amount */}
-          <div className="col-span-1">
+          {/* Changed col-span-1 to col-span-full for small screens */}
+          <div className="col-span-full sm:col-span-1 flex flex-col">
             <label htmlFor="creditAmount" className="block text-sm font-medium text-gray-700 mb-1">
               Credit Amount:
             </label>
@@ -249,7 +253,8 @@ const App = () => {
           </div>
 
           {/* Form Group: Date */}
-          <div className="col-span-1">
+          {/* Changed col-span-1 to col-span-full for small screens */}
+          <div className="col-span-full sm:col-span-1 flex flex-col">
             <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">
               Date:
             </label>
@@ -263,7 +268,8 @@ const App = () => {
           </div>
 
           {/* Form Group: Due Date */}
-          <div className="col-span-1">
+          {/* Changed col-span-1 to col-span-full for small screens */}
+          <div className="col-span-full sm:col-span-1 flex flex-col">
             <label htmlFor="dueDate" className="block text-sm font-medium text-gray-700 mb-1">
               Due Date:
             </label>
@@ -277,7 +283,8 @@ const App = () => {
           </div>
 
           {/* Form Group: Term */}
-          <div className="col-span-1">
+          {/* Changed col-span-1 to col-span-full for small screens */}
+          <div className="col-span-full sm:col-span-1 flex flex-col">
             <label htmlFor="term" className="block text-sm font-medium text-gray-700 mb-1">
               Term (months):
             </label>
@@ -292,17 +299,18 @@ const App = () => {
           </div>
 
           {/* Action Buttons - These will be hidden on print */}
-          <div className="col-span-2 flex justify-end space-x-4 mt-4 print-hide">
+          {/* Changed col-span-1 to col-span-full for small screens */}
+          <div className="col-span-full sm:col-span-2 flex justify-end space-x-2 sm:space-x-4 mt-2 sm:mt-4 print-hide">
             <button
               type="button"
               onClick={handleClear}
-              className="px-6 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+              className="px-4 py-2 sm:px-6 sm:py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
             >
               Clear
             </button>
             <button
               type="submit"
-              className="px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+              className="px-4 py-2 sm:px-6 sm:py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
             >
               Calculate Interest
             </button>
@@ -310,7 +318,7 @@ const App = () => {
               <button
                 type="button"
                 onClick={handlePrint}
-                className="px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out"
+                className="px-4 py-2 sm:px-6 sm:py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out"
               >
                 Print / Save PDF
               </button>
@@ -319,7 +327,7 @@ const App = () => {
         </form>
 
         {/* List of Monthly Interest */}
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-4 border-b-2 pb-2">
+        <h2 className="text-xl sm:text-2xl font-bold text-center text-gray-800 mb-3 sm:mb-4 border-b-2 pb-2">
           LIST OF MONTHLY INTEREST
         </h2>
         {monthlyInterestList.length > 0 ? (
@@ -327,16 +335,16 @@ const App = () => {
             <table className="min-w-full divide-y divide-gray-200 rounded-md overflow-hidden">
               <thead className="bg-indigo-100">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                  <th className="px-3 py-2 sm:px-6 sm:py-3 text-left text-xs sm:text-sm font-medium text-gray-600 uppercase tracking-wider">
                     Month
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                  <th className="px-3 py-2 sm:px-6 sm:py-3 text-left text-xs sm:text-sm font-medium text-gray-600 uppercase tracking-wider">
                     Monthly Payment
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                  <th className="px-3 py-2 sm:px-6 sm:py-3 text-left text-xs sm:text-sm font-medium text-gray-600 uppercase tracking-wider">
                     Interest Component
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                  <th className="px-3 py-2 sm:px-6 sm:py-3 text-left text-xs sm:text-sm font-medium text-gray-600 uppercase tracking-wider">
                     Remaining Balance
                   </th>
                 </tr>
@@ -344,16 +352,16 @@ const App = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {monthlyInterestList.map((item, index) => (
                   <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    <td className="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">
                       {item.month}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                    <td className="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">
                       ₱{item.monthlyPayment}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                    <td className="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">
                       ₱{item.interestComponent}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                    <td className="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">
                       ₱{item.remainingBalance}
                     </td>
                   </tr>
@@ -362,7 +370,7 @@ const App = () => {
             </table>
           </div>
         ) : (
-          <p className="text-center text-gray-500 py-8">
+          <p className="text-center text-gray-500 py-6 sm:py-8 text-sm">
             Enter credit details and click "Calculate Interest" to see the monthly breakdown.
           </p>
         )}
