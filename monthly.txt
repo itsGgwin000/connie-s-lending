@@ -9,10 +9,10 @@ const App = () => {
   const [creditAmount, setCreditAmount] = useState('');
   const [date, setDate] = useState('');
   const [dueDate, setDueDate] = useState('');
-  const [term, setTerm] = useState(''); // Term in days for new calculation
+  const [term, setTerm] = useState(''); // Term in months
 
-  // State for daily payment list
-  const [dailyPaymentList, setDailyPaymentList] = useState([]);
+  // State for monthly interest list
+  const [monthlyInterestList, setMonthlyInterestList] = useState([]);
 
   // Simple in-memory database for client names
   const [clientNames, setClientNames] = useState(() => {
@@ -42,40 +42,48 @@ const App = () => {
 
     // Basic validation
     if (!creditAmount || !term) {
-      alert('Credit Amount and Term (in days) are required.');
+      // Using a custom message box instead of alert in a real app
+      // For this example, we'll keep it simple, but for production, consider a modal.
+      alert('Credit Amount and Term are required.');
       return;
     }
 
     // Convert inputs to numbers
     const principal = parseFloat(creditAmount);
-    const totalDays = parseInt(term, 10);
+    const months = parseInt(term, 10);
 
-    // --- NEW Lending Rule: 10% interest for the whole term (e.g., 60 days) ---
-    const flatInterestRate = 0.10; // 10% for the entire term (e.g., 60 days)
-    const totalInterest = principal * flatInterestRate;
+    // --- Simple Interest Calculation (example, adjust as per your business logic) ---
+    // Assuming an annual interest rate of 10% (0.10)
+    const annualInterestRate = 0.10;
+    const monthlyInterestRate = annualInterestRate / 12;
+
+    const calculatedInterestList = [];
+    let remainingBalance = principal;
+
+    // Calculate fixed monthly payment (Principal + Total Interest) / Term
+    const totalInterest = principal * annualInterestRate * (months / 12);
     const totalAmountDue = principal + totalInterest;
+    const monthlyPayment = totalAmountDue / months;
 
-    // Calculate fixed daily payment
-    const dailyPayment = totalAmountDue / totalDays;
-    const dailyInterestComponent = totalInterest / totalDays; // Portion of total interest per day
-    const dailyPrincipalComponent = principal / totalDays; // Portion of principal per day
+    for (let i = 1; i <= months; i++) {
+      // For simplicity, we'll show a fixed monthly payment and remaining balance decreasing
+      // In a real lending app, this would involve more complex amortization
+      const interestForMonth = principal * monthlyInterestRate; // Simple interest on original principal
 
-    const calculatedDailyPayments = [];
-    let remainingPrincipal = principal;
+      // For this simplified example, we'll just track remaining principal decreasing
+      // and show the fixed monthly payment.
+      remainingBalance -= (monthlyPayment - interestForMonth); // This is an approximation for principal reduction
 
-    for (let i = 1; i <= totalDays; i++) {
-      // Deduct the principal component from the remaining principal for display
-      remainingPrincipal = Math.max(0, remainingPrincipal - dailyPrincipalComponent);
-
-      calculatedDailyPayments.push({
-        day: i,
-        dailyPayment: dailyPayment.toFixed(2),
-        interestComponent: dailyInterestComponent.toFixed(2),
-        // The remaining balance here strictly reflects the principal
-        remainingBalance: remainingPrincipal.toFixed(2),
+      calculatedInterestList.push({
+        month: i,
+        // For a simple display, we'll show the fixed monthly payment
+        monthlyPayment: monthlyPayment.toFixed(2),
+        // And an approximate remaining balance
+        remainingBalance: Math.max(0, remainingBalance).toFixed(2),
+        interestComponent: interestForMonth.toFixed(2), // The fixed interest portion for display
       });
     }
-    setDailyPaymentList(calculatedDailyPayments);
+    setMonthlyInterestList(calculatedInterestList);
   };
 
   // Clear form fields
@@ -87,7 +95,7 @@ const App = () => {
     setDate('');
     setDueDate('');
     setTerm('');
-    setDailyPaymentList([]); // Clear daily payment list
+    setMonthlyInterestList([]);
   };
 
   // Handle print functionality
@@ -170,11 +178,12 @@ const App = () => {
 
       <div className="bg-white p-4 sm:p-6 rounded-lg shadow-xl w-full max-w-4xl border border-gray-200 print-container">
         <h1 className="text-2xl sm:text-3xl font-extrabold text-center text-indigo-700 mb-4 sm:mb-6 border-b-2 pb-2">
-          Lending Business Application
+          Connie's Pautang Application
         </h1>
 
         <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
           {/* Form Group: Received Cash */}
+          {/* Changed col-span-1 to col-span-full for small screens */}
           <div className="col-span-full sm:col-span-1 flex flex-col">
             <label htmlFor="receivedCash" className="block text-sm font-medium text-gray-700 mb-1">
               RECEIVED CASH:
@@ -190,6 +199,7 @@ const App = () => {
           </div>
 
           {/* Form Group: Name */}
+          {/* Changed col-span-1 to col-span-full for small screens */}
           <div className="col-span-full sm:col-span-1 flex flex-col">
             <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
               Name:
@@ -211,6 +221,7 @@ const App = () => {
           </div>
 
           {/* Form Group: Address */}
+          {/* Ensured col-span-full for small screens and sm:col-span-2 for larger */}
           <div className="col-span-full sm:col-span-2 flex flex-col">
             <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
               Address:
@@ -226,6 +237,7 @@ const App = () => {
           </div>
 
           {/* Form Group: Credit Amount */}
+          {/* Changed col-span-1 to col-span-full for small screens */}
           <div className="col-span-full sm:col-span-1 flex flex-col">
             <label htmlFor="creditAmount" className="block text-sm font-medium text-gray-700 mb-1">
               Credit Amount:
@@ -241,6 +253,7 @@ const App = () => {
           </div>
 
           {/* Form Group: Date */}
+          {/* Changed col-span-1 to col-span-full for small screens */}
           <div className="col-span-full sm:col-span-1 flex flex-col">
             <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">
               Date:
@@ -255,6 +268,7 @@ const App = () => {
           </div>
 
           {/* Form Group: Due Date */}
+          {/* Changed col-span-1 to col-span-full for small screens */}
           <div className="col-span-full sm:col-span-1 flex flex-col">
             <label htmlFor="dueDate" className="block text-sm font-medium text-gray-700 mb-1">
               Due Date:
@@ -268,10 +282,11 @@ const App = () => {
             />
           </div>
 
-          {/* Form Group: Term (now in Days) */}
+          {/* Form Group: Term */}
+          {/* Changed col-span-1 to col-span-full for small screens */}
           <div className="col-span-full sm:col-span-1 flex flex-col">
             <label htmlFor="term" className="block text-sm font-medium text-gray-700 mb-1">
-              Term (days): {/* Label changed to reflect 'days' */}
+              Term (months):
             </label>
             <input
               type="number"
@@ -279,11 +294,12 @@ const App = () => {
               value={term}
               onChange={(e) => setTerm(e.target.value)}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              placeholder="e.g., 60" /* Placeholder updated */
+              placeholder="e.g., 12"
             />
           </div>
 
           {/* Action Buttons - These will be hidden on print */}
+          {/* Changed col-span-1 to col-span-full for small screens */}
           <div className="col-span-full sm:col-span-2 flex justify-end space-x-2 sm:space-x-4 mt-2 sm:mt-4 print-hide">
             <button
               type="button"
@@ -298,7 +314,7 @@ const App = () => {
             >
               Calculate Interest
             </button>
-            {dailyPaymentList.length > 0 && (
+            {monthlyInterestList.length > 0 && (
               <button
                 type="button"
                 onClick={handlePrint}
@@ -310,37 +326,37 @@ const App = () => {
           </div>
         </form>
 
-        {/* List of Daily Payments */}
+        {/* List of Monthly Interest */}
         <h2 className="text-xl sm:text-2xl font-bold text-center text-gray-800 mb-3 sm:mb-4 border-b-2 pb-2">
-          LIST OF DAILY PAYMENTS {/* Title changed */}
+          LIST OF MONTHLY INTEREST
         </h2>
-        {dailyPaymentList.length > 0 ? (
+        {monthlyInterestList.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 rounded-md overflow-hidden">
               <thead className="bg-indigo-100">
                 <tr>
                   <th className="px-3 py-2 sm:px-6 sm:py-3 text-left text-xs sm:text-sm font-medium text-gray-600 uppercase tracking-wider">
-                    Day {/* Header changed */}
+                    Month
                   </th>
                   <th className="px-3 py-2 sm:px-6 sm:py-3 text-left text-xs sm:text-sm font-medium text-gray-600 uppercase tracking-wider">
-                    Daily Payment {/* Header changed */}
+                    Monthly Payment
                   </th>
                   <th className="px-3 py-2 sm:px-6 sm:py-3 text-left text-xs sm:text-sm font-medium text-gray-600 uppercase tracking-wider">
                     Interest Component
                   </th>
                   <th className="px-3 py-2 sm:px-6 sm:py-3 text-left text-xs sm:text-sm font-medium text-gray-600 uppercase tracking-wider">
-                    Remaining Principal {/* Header changed */}
+                    Remaining Balance
                   </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {dailyPaymentList.map((item, index) => (
+                {monthlyInterestList.map((item, index) => (
                   <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
                     <td className="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">
-                      {item.day} {/* Data point changed */}
+                      {item.month}
                     </td>
                     <td className="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">
-                      ₱{item.dailyPayment}
+                      ₱{item.monthlyPayment}
                     </td>
                     <td className="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">
                       ₱{item.interestComponent}
@@ -355,7 +371,7 @@ const App = () => {
           </div>
         ) : (
           <p className="text-center text-gray-500 py-6 sm:py-8 text-sm">
-            Enter credit details and click "Calculate Interest" to see the daily payment breakdown.
+            Enter credit details and click "Calculate Interest" to see the monthly breakdown.
           </p>
         )}
       </div>
