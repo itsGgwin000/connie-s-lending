@@ -78,30 +78,42 @@ const App = () => {
         });
       }
     } else {
-      // --- Monthly Lending Rule: 10% Annual Percentage Rate (APR) ---
-      const annualInterestRate = 0.10; // 10% APR
-      const monthlyInterestRate = annualInterestRate / 12;
+      // --- Monthly Lending Rule (Updated per user's specific rules):
+      // 1. 10% flat interest on the principal for the entire term. This is collected ONLY in the last payment.
+      // 2. A fixed "service fee" (intermediatePayment) is collected in each intermediate month.
+      //    Based on user's examples (1000 for 10000, 500 for 5000), this "service fee" seems to be 10% of the principal.
+      // 3. The original principal is collected ONLY in the last payment.
 
-      // Simple interest calculation for the term (often more complex for actual loans)
-      // This is consistent with previous monthly calculation: Principal * APR * (Months / 12)
-      const totalInterest = principal * annualInterestRate * (totalPeriods / 12);
-      const totalAmountDue = principal + totalInterest;
+      const flatInterestRate = 0.10; // 10% flat interest
+      const totalInterest = principal * flatInterestRate; // This is the total 10% interest for the loan
 
-      // Calculate fixed monthly payment (Principal + Total Interest) / Total Months
-      const monthlyPayment = totalAmountDue / totalPeriods;
+      // Based on user's examples, the intermediate monthly payment seems to be 10% of the principal.
+      // This is not principal reduction, but an additional fixed monthly "service fee".
+      const intermediateMonthlyFee = principal * 0.10; // e.g., 1000 for 10000, 500 for 5000
 
-      let remainingPrincipal = principal;
+      let remainingPrincipalForDisplay = principal; // Principal to display as remaining balance (does not reduce until final payment)
 
       for (let i = 1; i <= totalPeriods; i++) {
-        const interestForMonth = principal * monthlyInterestRate; // Simple interest on original principal
-        const principalPaidThisMonth = monthlyPayment - interestForMonth;
-        remainingPrincipal = Math.max(0, remainingPrincipal - principalPaidThisMonth);
+        let paymentAmount;
+        let interestPart = 0; // Interest is 0 for intermediate payments based on rules
+
+        if (i < totalPeriods) {
+          // For all but the last period: pay the fixed monthly service fee
+          paymentAmount = intermediateMonthlyFee;
+          // The remaining balance for display stays the original principal.
+        } else {
+          // Last period: original principal + total 10% flat interest
+          paymentAmount = principal + totalInterest; // Full original principal + total calculated interest
+          interestPart = totalInterest; // The entire 10% interest is collected here
+          remainingPrincipalForDisplay = 0; // Loan fully paid
+        }
 
         calculatedSchedule.push({
-          period: i, // Use 'period' for generic day/month
-          payment: monthlyPayment.toFixed(2),
-          interestComponent: interestForMonth.toFixed(2),
-          remainingBalance: remainingPrincipal.toFixed(2),
+          period: i,
+          payment: paymentAmount.toFixed(2),
+          interestComponent: interestPart.toFixed(2),
+          // Remaining balance always shows the original principal until the last payment
+          remainingBalance: remainingPrincipalForDisplay.toFixed(2),
         });
       }
     }
@@ -327,7 +339,7 @@ const App = () => {
               value={term}
               onChange={(e) => setTerm(e.target.value)}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              placeholder={isDailyMode ? 'e.g., 60' : 'e.g., 12'} // Placeholder changes dynamically
+              placeholder={isDailyMode ? 'e.g., 60' : 'e.g., 3'} // Placeholder changes dynamically
             />
           </div>
 
@@ -371,7 +383,7 @@ const App = () => {
                     {isDailyMode ? 'Day' : 'Month'} {/* Header changes dynamically */}
                   </th>
                   <th className="px-3 py-2 sm:px-6 sm:py-3 text-left text-xs sm:text-sm font-medium text-gray-600 uppercase tracking-wider">
-                    {isDailyMode ? 'Daily Payment' : 'Monthly Payment'} {/* Header changes dynamically */}
+                    {isDailyMode ? 'Daily Payment' : 'Payment Due'} {/* Header changes dynamically */}
                   </th>
                   <th className="px-3 py-2 sm:px-6 sm:py-3 text-left text-xs sm:text-sm font-medium text-gray-600 uppercase tracking-wider">
                     Interest Component
